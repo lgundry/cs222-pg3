@@ -64,16 +64,14 @@ queue<queue<char>> maze::solveMaze() {
     int tempSpace1;
     int tempSpace2;
 
-    while (!solved) {
-
-        for (int i = 0; i < height; i++) {
+    for (int i = 0; i < height; i++) {
             spaces.push(getSpaces(peek(myMaze)));
-        }
-
+    }
+    while (!solved) {
         switch(failcount) {
 
         }
-
     }
+    return ans;
 
 }
