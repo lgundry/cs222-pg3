@@ -33,7 +33,8 @@ char maze::peek(queue<char> row) {
     row.push(ans);
     return ans;
 }
-queue<char> peek(queue<queue<char>> maze) {
+
+queue<char> maze::peek(queue<queue<char>> maze) {
     queue<char> ans = maze.pop();
     maze.push(ans);
     return ans;
