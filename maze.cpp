@@ -43,37 +43,10 @@ queue<char>* maze::peek() {
     return ans;
 }
 
-int* maze::getSpaces(queue<char>* row) {
-    int* spaces = 0;
-    int spaceindex = 0;
-    for (int i = 0; i < width; i++) {
-        if (peek(row) == ' ') {
-            spaces[spaceindex] = i;
-            spaceindex++;
-        }
-    }
-    return spaces;
+queue<queue<char>*> maze::solveMaze() {
+    queue<pair<int, int>> path;
+    
 }
-
-queue<queue<char>> maze::solveMaze() {
-
-    queue<char> row;
-    queue<int*> spaces;
-    queue<queue<char>> ans;
-    queue<queue<char>> tempPath;
-    int failcount = 0;
-    int* tempSpaces = 0;
-    bool solved = false;
-
-    int tempSpace1;
-    int tempSpace2;
-
-    for (int i = 0; i < height; i++) {
-            spaces.push(getSpaces(peek()));
-    }
-    return ans;
-}
-
 void maze::print() {
     queue<char> *row;
     for (int i = 0; i < height; i++) {
