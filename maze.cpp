@@ -3,44 +3,47 @@
 using namespace std;
 
 
-maze::maze(string blueprint, int height, int width) {
+maze::maze(string blueprint, int newHeight, int newWidth) {
 
     // initialize maze components
-    queue<char> row;
+    queue<char> *row = new queue<char>;
+    height = newHeight;
+    width = newWidth;
 
     // verify blueprint
     assert(blueprint.length() == height * width);
-    assert(blueprint[0] == ' ');
 
     // start create maze
     for (int i = 0; i < height; i++) {
         for (int j = 0; j < width; j++) {
             if (i == 0 && j == 0)
-                row.push('S');
+                row->push('S');
             else if (i == height-1 && j == width-1)
-                row.push('E');
+                row->push('E');
              else 
-                row.push(blueprint[i+j]);
+                row->push(blueprint[i*width+j]);
         }
         myMaze.push(row);
+        row = nullptr;
+        row = new queue<char>;
     }
     // end create maze
     
 }
 
-char maze::peek(queue<char> row) {
-    char ans = row.pop();
-    row.push(ans);
+char maze::peek(queue<char>* row) {
+    char ans = row->pop();
+    row->push(ans);
     return ans;
 }
 
-queue<char> maze::peek(queue<queue<char>> maze) {
-    queue<char> ans = maze.pop();
-    maze.push(ans);
+queue<char>* maze::peek() {
+    queue<char> *ans = myMaze.pop();
+    myMaze.push(ans);
     return ans;
 }
 
-int* maze::getSpaces(queue<char> row) {
+int* maze::getSpaces(queue<char>* row) {
     int* spaces = 0;
     int spaceindex = 0;
     for (int i = 0; i < width; i++) {
@@ -66,13 +69,18 @@ queue<queue<char>> maze::solveMaze() {
     int tempSpace2;
 
     for (int i = 0; i < height; i++) {
-            spaces.push(getSpaces(peek(myMaze)));
-    }
-    while (!solved) {
-        switch(failcount) {
-
-        }
+            spaces.push(getSpaces(peek()));
     }
     return ans;
+}
 
+void maze::print() {
+    queue<char> *row;
+    for (int i = 0; i < height; i++) {
+        row = peek();
+        for (int j = 0; j < width; j++) {
+            cout << peek(row);
+        }
+        cout << endl;
+    }
 }

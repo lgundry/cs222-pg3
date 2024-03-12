@@ -7,7 +7,7 @@
 using namespace std;
 
 class maze {
-    queue<queue<char>> myMaze;
+    queue<queue<char>*> myMaze;
     int height, width;
 
     public:
@@ -15,8 +15,8 @@ class maze {
     maze(string blueprint, int height, int width); // constructor
     ~maze();
     queue<queue<char>> solveMaze();
-    int* getSpaces(queue<char> row);
-    char peek(queue<char> row);
-    queue<char> peek(queue<queue<char>> maze);
+    int* getSpaces(queue<char>* row);
+    char peek(queue<char>* row);
+    queue<char>* peek();
     void print();
 };

@@ -71,13 +71,13 @@ int main(){
         }
         
         // if the user gives too many characters
-        if (input.length() > width + 1)
-            input.erase(width + 1, input.length() - (width + 1));
+        if (input.length() > width)
+            input.erase(width, input.length() - (width));
         mazeBlueprint += input;
-
-        cout << "Solving maze..." << endl;
-
-        maze *myMaze = new maze(mazeBlueprint, height, width);
-        myMaze->solveMaze();
     }
+    cout << "Solving maze..." << endl;
+
+    maze *myMaze = new maze(mazeBlueprint, height, width);
+    // myMaze->solveMaze();
+    myMaze->print();
 }
