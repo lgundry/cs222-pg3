@@ -8,8 +8,8 @@
 using namespace std;
 
 class maze {
-    queue<queue<char>*> myMaze;
-    queue<queue<char>*> solution;
+    queue<queue<char>*>* myMaze;
+    queue<queue<char>*>* solution;
     queue<pair<int, int>> path;
     queue<pair<int, int>> pointsVisited;
     int height, width;
