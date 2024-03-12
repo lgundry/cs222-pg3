@@ -38,9 +38,7 @@ int main(){
         << "Width: All real integers accepted\n" 
         << "Maze construction: Characters accepted are '*' and ' '. The top leftmost slot is the\n"
         << "\tstarting point, while the bottom rightmost slot is the end point. If you go past the\n"
-        << "\tend of the maze boundaries, the end will simply be cut off.\n"
-        << "Final Rule: The solver cannot follow paths moving upwards, so make sure your maze only requires\n"
-        << "\tdownward and lateral movements to solve\n\n"
+        << "\tend of the maze boundaries, the end will simply be cut off.\n\n"
         << endl;
 
     int height;
@@ -78,6 +76,6 @@ int main(){
     cout << "Solving maze..." << endl;
 
     maze *myMaze = new maze(mazeBlueprint, height, width);
-    // myMaze->solveMaze();
+    myMaze->solveMaze();
     myMaze->print();
 }
