@@ -161,11 +161,11 @@ char maze::checkup(pair<int, int> current, maze *m) {
 
 bool maze::findPath(pair<int, int> current) {
     bool ans = false;
-    pointsVisited.push(current);
     if (visited(current, this, pointsVisited)) {
         return false;
     }
-    else if (checkcurrent(current, this) == 'E') {
+    pointsVisited.push(current);
+    if (checkcurrent(current, this) == 'E') {
         path.push(current);
         return true;
     }
@@ -219,6 +219,7 @@ void maze::solveMaze() {
     generateSolution();
     myMaze = solution;
 }
+
 void maze::print() {
     queue<char> *row;
     for (int i = 0; i < height; i++) {
