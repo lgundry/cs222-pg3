@@ -8,6 +8,7 @@ maze::maze(string blueprint, int newHeight, int newWidth) {
     // initialize maze components
     queue<char> *row = new queue<char>;
     myMaze = new queue<queue<char>*>;
+    solution = new queue<queue<char> *>;
     height = newHeight;
     width = newWidth;
 
@@ -32,39 +33,63 @@ maze::maze(string blueprint, int newHeight, int newWidth) {
     
 }
 
+maze::~maze() {
+    delete myMaze;
+    delete solution;
+}
+
 char maze::peek(queue<char>* row) {
-    char ans = row->pop();
-    row->push(ans);
+    char ans = 0;
+    if (!row->isEmpty()) {
+        char ans = row->pop();
+        row->push(ans);
+    }
     return ans;
 }
 
 queue<char>* maze::peek() {
-    queue<char> *ans = myMaze->pop();
-    myMaze->push(ans);
+    queue<char> *ans = nullptr;
+    if (!myMaze->isEmpty()) {
+        ans = myMaze->pop();
+        myMaze->push(ans);
+    }
     return ans;
 }
 
-bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> path) {
-    queue<pair<int, int>> tempPath = path;
-    while (!tempPath.isEmpty()) {
-        pair<int, int> temp = tempPath.pop();
-        if (temp == location) {
-            return true;
+bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
+    queue<pair<int, int>> tempPath;
+    bool ans = false;
+    //loop through pop it off and push it both to make a copy - Haskel
+    pair<int, int> first = path.pop();
+    pair<int, int> temp;
+    path.push(first);
+    int count = 0;
+    if (first == location)
+        return true;
+    while (true) {
+        temp = path.pop();
+        if (temp == first) {
+            break;
         }
+        else if (temp == location) {
+            ans = true;
+        }
+        count++;
     }
-    return false;
+    
+    return ans;
 }
 
 char maze::checkcurrent(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
+    char temp = 0;
     for (int i = 0; i <= current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j < current.second + width - 1; j++) {
-        peek(row);
+    for (int j = 0; j <= current.second; j++) {
+        temp = peek(row);
     }
-    char temp = peek(row);
     if (temp == '*') {
         ans = 0;
     }
@@ -82,22 +107,22 @@ char maze::checkcurrent(pair<int, int> current, maze *m) {
 char maze::checkleft(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
+    char temp = 0;
     if (visited(current, m, pointsVisited)) {
         return 0;
     }
     for (int i = 0; i <= current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j < current.second + width - 2; j++) {
-        peek(row);
+    for (int j = 0; j < current.second; j++) {
+        temp = peek(row);
     }
-    char temp = peek(row);
     if (temp == '*') {
-        ans = false;
+        ans = 0;
     }
     else 
         ans = temp;
-    for (int i = 0; i < width - current.second + 1; i++) {
+    for (int i = 0; i <= width - current.second; i++) {
         peek(row);
     }
     for (int i = 0; i < height - current.first; i++) {
@@ -108,22 +133,22 @@ char maze::checkleft(pair<int, int> current, maze *m) {
 char maze::checkright(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
+    char temp = 0;
     if (visited(current, m, pointsVisited)) {
         return 0;
     }
     for (int i = 0; i <= current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j < current.second + width; j++) {
-        peek(row);
+    for (int j = 0; j <= current.second + 1; j++) {
+        temp = peek(row);
     }
-    char temp = peek(row);
     if (temp == '*') {
         ans = false;
     }
     else 
         ans = temp;
-    for (int i = 0; i < width - current.second - 1; i++) {
+    for (int i = 0; i < width - (current.second - 1); i++) {
         peek(row);
     }
     for (int i = 0; i < height - current.first; i++) {
@@ -134,16 +159,16 @@ char maze::checkright(pair<int, int> current, maze *m) {
 char maze::checkdown(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
+    char temp = 0;
     if (visited(current, m, pointsVisited)) {
         return 0;
     }
     for (int i = 0; i <= current.first + 1; i++) {
         row = m->peek();
     }
-    for (int j = 0; j < current.second + width - 1; j++) {
-        peek(row);
+    for (int j = 0; j <= current.second; j++) {
+        temp = peek(row);
     }
-    char temp = peek(row);
     if (temp == '*') {
         ans = false;
     }
@@ -152,7 +177,7 @@ char maze::checkdown(pair<int, int> current, maze *m) {
     for (int i = 0; i < width - current.second; i++) {
         peek(row);
     }
-    for (int i = 0; i < height - current.first - 1; i++) {
+    for (int i = 0; i < height - (current.first - 1); i++) {
         m->peek();
     }
     return ans;
@@ -160,23 +185,23 @@ char maze::checkdown(pair<int, int> current, maze *m) {
 char maze::checkup(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
+    char temp = 0;
     if (visited(current, m, pointsVisited)) {
         return 0;
     }
-    for (int i = 0; i <= current.first - 1; i++) {
+    for (int i = 0; i < current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j < current.second + width - 1; j++) {
-        peek(row);
+    for (int j = 0; j <= current.second; j++) {
+        temp = peek(row);
     }
-    char temp = peek(row);
     if (temp == '*') {
         ans = false;
     }
     for (int i = 0; i < width - current.second; i++) {
         peek(row);
     }
-    for (int i = 0; i < height - current.first + 1; i++) {
+    for (int i = 0; i <= height - current.first; i++) {
         m->peek();
     }
     return ans;
@@ -184,14 +209,11 @@ char maze::checkup(pair<int, int> current, maze *m) {
 
 bool maze::findPath(pair<int, int> current) {
     bool ans = false;
-    if (visited(current, this, pointsVisited)) {
-        return false;
-    }
-    pointsVisited.push(current);
     if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
         return false;
     }
-    else if (checkcurrent(current, this) == 'E') {
+    pointsVisited.push(current);
+    if (checkcurrent(current, this) == 'E') {
         path.push(current);
         return true;
     }
