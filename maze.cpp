@@ -45,13 +45,12 @@ queue<char>* maze::peek() {
 }
 
 bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> path) {
-    while (!path.isEmpty()) {
-        pair<int, int> temp = path.pop();
+    queue<pair<int, int>> tempPath = path;
+    while (!tempPath.isEmpty()) {
+        pair<int, int> temp = tempPath.pop();
         if (temp == location) {
-            path.push(temp);
             return true;
         }
-        path.push(temp);
     }
     return false;
 }
@@ -185,6 +184,9 @@ char maze::checkup(pair<int, int> current, maze *m) {
 
 bool maze::findPath(pair<int, int> current) {
     bool ans = false;
+    if (visited(current, this, pointsVisited)) {
+        return false;
+    }
     pointsVisited.push(current);
     if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
         return false;
@@ -197,11 +199,11 @@ bool maze::findPath(pair<int, int> current) {
         path.push(current);
         return true;
     }
-    else if (checkleft(current, this) && findPath(make_pair(current.first, current.second - 1))) {
+    else if (checkdown(current, this) && findPath(make_pair(current.first + 1, current.second))) {
         path.push(current);
         return true;
     }
-    else if (checkdown(current, this) && findPath(make_pair(current.first + 1, current.second))) {
+    else if (checkleft(current, this) && findPath(make_pair(current.first, current.second - 1))) {
         path.push(current);
         return true;
     }
@@ -250,7 +252,10 @@ void maze::print() {
     for (int i = 0; i < height; i++) {
         row = peek();
         for (int j = 0; j < width; j++) {
-            cout << peek(row);
+            if (!row->isEmpty())
+                cout << peek(row);
+            else
+                break;
         }
         cout << endl;
     }
