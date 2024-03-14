@@ -82,30 +82,10 @@ bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
     return ans;
 }
 
-char maze::checkcurrent(pair<int, int> current, maze *m) {
-    queue<char> *row = new queue<char>;
-    char ans = ' ';
-    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
-        return false;
-    }
-    for (int i = 0; i < current.first; i++) {
-        row = m->peek();
-    }
-    for (int j = 0; j < current.second; j++) {
-        ans = peek(row);
-    }
-    for (int i = 0; i < width - current.second; i++) {
-        peek(row);
-    }
-    for (int i = 0; i < height - current.first; i++) {
-        m->peek();
-    }
-    return ans;
-}
 char maze::checkright(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
-    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+    if (current.second <= 0 || current.first <= 0 || current.second > width || current.first > height) {
         return false;
     }
     if (visited(make_pair(current.first, current.second + 1), m, pointsVisited)) {
@@ -128,7 +108,7 @@ char maze::checkright(pair<int, int> current, maze *m) {
 char maze::checkdown(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
-    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+    if (current.second <= 0 || current.first <= 0 || current.second > width || current.first > height) {
         return false;
     }
     if (visited(make_pair(current.first + 1, current.second), m, pointsVisited)) {
@@ -143,7 +123,7 @@ char maze::checkdown(pair<int, int> current, maze *m) {
     for (int i = 0; i < width - current.second; i++) {
         peek(row);
     }
-    for (int i = 0; i <= height - current.first - 2; i++) {
+    for (int i = 0; i < height - current.first - 1; i++) {
         m->peek();
     }
     return ans;
@@ -155,7 +135,7 @@ bool maze::findPath(pair<int, int> current) {
         return false;
     }
     pointsVisited.push(current);
-    if (checkcurrent(current, this) == 'E') {
+    if (current == make_pair(height, width)) {
         path.push(current);
         return true;
     }

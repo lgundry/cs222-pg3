@@ -80,9 +80,8 @@ int main(){
             input.erase(width, input.length() - (width));
         mazeBlueprint += input;
     }
-    cout << "Solving maze..." << endl;
-
     maze *myMaze = new maze(mazeBlueprint, height, width);
+    cout << "Solving maze..." << endl;
     myMaze->solveMaze();
     myMaze->print();
 }
