@@ -8,7 +8,6 @@ maze::maze(string blueprint, int newHeight, int newWidth) {
     // initialize maze components
     queue<char> *row = new queue<char>;
     myMaze = new queue<queue<char>*>;
-    solution = new queue<queue<char> *>;
     height = newHeight;
     width = newWidth;
 
@@ -35,13 +34,12 @@ maze::maze(string blueprint, int newHeight, int newWidth) {
 
 maze::~maze() {
     delete myMaze;
-    delete solution;
 }
 
 char maze::peek(queue<char>* row) {
     char ans = 0;
     if (!row->isEmpty()) {
-        char ans = row->pop();
+        ans = row->pop();
         row->push(ans);
     }
     return ans;
@@ -57,17 +55,17 @@ queue<char>* maze::peek() {
 }
 
 bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
-    queue<pair<int, int>> tempPath;
     bool ans = false;
     //loop through pop it off and push it both to make a copy - Haskel
     pair<int, int> first = path.pop();
     pair<int, int> temp;
     path.push(first);
     int count = 0;
-    if (first == location)
-        return true;
-    while (true) {
-        temp = path.pop();
+    if (first == location) {
+        ans =  true;
+    }
+    while (temp = path.pop(), temp != first) {
+        path.push(temp);
         if (temp == first) {
             break;
         }
@@ -76,53 +74,27 @@ bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
         }
         count++;
     }
-    
+    path.push(first);
+    for (int i = 0; i < count; i++) {
+        temp = path.pop();
+        path.push(temp);
+    }
     return ans;
 }
 
 char maze::checkcurrent(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
-    char temp = 0;
-    for (int i = 0; i <= current.first; i++) {
-        row = m->peek();
+    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+        return false;
     }
-    for (int j = 0; j <= current.second; j++) {
-        temp = peek(row);
-    }
-    if (temp == '*') {
-        ans = 0;
-    }
-    else 
-        ans = temp;
-    for (int i = 0; i < width - current.second; i++) {
-        peek(row);
-    }
-    for (int i = 0; i < height - current.first; i++) {
-        m->peek();
-    }
-    return ans;
-}
-
-char maze::checkleft(pair<int, int> current, maze *m) {
-    queue<char> *row = new queue<char>;
-    char ans = ' ';
-    char temp = 0;
-    if (visited(current, m, pointsVisited)) {
-        return 0;
-    }
-    for (int i = 0; i <= current.first; i++) {
+    for (int i = 0; i < current.first; i++) {
         row = m->peek();
     }
     for (int j = 0; j < current.second; j++) {
-        temp = peek(row);
+        ans = peek(row);
     }
-    if (temp == '*') {
-        ans = 0;
-    }
-    else 
-        ans = temp;
-    for (int i = 0; i <= width - current.second; i++) {
+    for (int i = 0; i < width - current.second; i++) {
         peek(row);
     }
     for (int i = 0; i < height - current.first; i++) {
@@ -133,22 +105,19 @@ char maze::checkleft(pair<int, int> current, maze *m) {
 char maze::checkright(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
-    char temp = 0;
-    if (visited(current, m, pointsVisited)) {
+    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+        return false;
+    }
+    if (visited(make_pair(current.first, current.second + 1), m, pointsVisited)) {
         return 0;
     }
-    for (int i = 0; i <= current.first; i++) {
+    for (int i = 0; i < current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j <= current.second + 1; j++) {
-        temp = peek(row);
+    for (int j = 0; j <= current.second; j++) {
+        ans = peek(row);
     }
-    if (temp == '*') {
-        ans = false;
-    }
-    else 
-        ans = temp;
-    for (int i = 0; i < width - (current.second - 1); i++) {
+    for (int i = 0; i < width - current.second - 1; i++) {
         peek(row);
     }
     for (int i = 0; i < height - current.first; i++) {
@@ -159,49 +128,22 @@ char maze::checkright(pair<int, int> current, maze *m) {
 char maze::checkdown(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
-    char temp = 0;
-    if (visited(current, m, pointsVisited)) {
+    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+        return false;
+    }
+    if (visited(make_pair(current.first + 1, current.second), m, pointsVisited)) {
         return 0;
     }
-    for (int i = 0; i <= current.first + 1; i++) {
+    for (int i = 0; i <= current.first; i++) {
         row = m->peek();
     }
-    for (int j = 0; j <= current.second; j++) {
-        temp = peek(row);
-    }
-    if (temp == '*') {
-        ans = false;
-    }
-    else 
-        ans = temp;
-    for (int i = 0; i < width - current.second; i++) {
-        peek(row);
-    }
-    for (int i = 0; i < height - (current.first - 1); i++) {
-        m->peek();
-    }
-    return ans;
-}
-char maze::checkup(pair<int, int> current, maze *m) {
-    queue<char> *row = new queue<char>;
-    char ans = ' ';
-    char temp = 0;
-    if (visited(current, m, pointsVisited)) {
-        return 0;
-    }
-    for (int i = 0; i < current.first; i++) {
-        row = m->peek();
-    }
-    for (int j = 0; j <= current.second; j++) {
-        temp = peek(row);
-    }
-    if (temp == '*') {
-        ans = false;
+    for (int j = 0; j < current.second; j++) {
+        ans = peek(row);
     }
     for (int i = 0; i < width - current.second; i++) {
         peek(row);
     }
-    for (int i = 0; i <= height - current.first; i++) {
+    for (int i = 0; i <= height - current.first - 2; i++) {
         m->peek();
     }
     return ans;
@@ -209,7 +151,7 @@ char maze::checkup(pair<int, int> current, maze *m) {
 
 bool maze::findPath(pair<int, int> current) {
     bool ans = false;
-    if (current.second < 0 || current.first < 0 || current.second > width || current.first > height) {
+    if (current.second <= 0 || current.first <= 0 || current.second > width || current.first > height) {
         return false;
     }
     pointsVisited.push(current);
@@ -217,19 +159,11 @@ bool maze::findPath(pair<int, int> current) {
         path.push(current);
         return true;
     }
-    else if (checkright(current, this) && findPath(make_pair(current.first, current.second + 1))) {
+    else if ((checkright(current, this) != '*') && findPath(make_pair(current.first, current.second + 1))) {
         path.push(current);
         return true;
     }
-    else if (checkdown(current, this) && findPath(make_pair(current.first + 1, current.second))) {
-        path.push(current);
-        return true;
-    }
-    else if (checkleft(current, this) && findPath(make_pair(current.first, current.second - 1))) {
-        path.push(current);
-        return true;
-    }
-    else if (checkup(current, this) && findPath(make_pair(current.first - 1, current.second))) {
+    else if ((checkdown(current, this) != '*') && findPath(make_pair(current.first + 1, current.second))) {
         path.push(current);
         return true;
     }
@@ -237,36 +171,37 @@ bool maze::findPath(pair<int, int> current) {
 }
 
 void maze::generateSolution() {
-    queue<char> *row = new queue<char>;
+    queue<char> *row;
     while (!path.isEmpty()) {
         pair<int, int> current = path.pop();
-        for (int i = 0; i < current.first; i++) {
+        row = new queue<char>;
+        for (int i = 0; i < current.first - 1; i++) {
             peek();
         }
         row = myMaze->pop();
-        for (int i = 0; i < current.second; i++) {
+        for (int i = 0; i < current.second - 1; i++) {
             peek(row);
         }
         row->pop();
         row->push('X');
-        for (int i = 0; i < width - current.second - 1; i++) {
+        for (int i = 0; i < width - current.second; i++) {
             peek(row);
         }
         myMaze->push(row);
-        for (int i = 0; i < height - current.first - 1; i++) {
+        for (int i = 0; i < height - current.first; i++) {
             peek();
         }
+        row = nullptr;
     }
 }
 
 void maze::solveMaze() {
     queue<queue<char>*> ans;
-    if (!findPath(make_pair(0, 0))) {
+    if (!findPath(make_pair(1, 1))) {
         perror("No path found");
         exit(0);
     }
     generateSolution();
-    myMaze = solution;
 }
 
 void maze::print() {

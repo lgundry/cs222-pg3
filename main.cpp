@@ -32,14 +32,21 @@ bool verify(string input, int type) {
 
 int main(){
 
-    cout 
-        << "\nWelcome to the maze solver. You will be asked the following: \n" 
-        << "Height: All real integers accepted\n" 
-        << "Width: All real integers accepted\n" 
-        << "Maze construction: Characters accepted are '*' and ' '. The top leftmost slot is the\n"
-        << "\tstarting point, while the bottom rightmost slot is the end point. If you go past the\n"
-        << "\tend of the maze boundaries, the end will simply be cut off.\n\n"
-        << endl;
+    cout << "Welcome to my CS220 Maze Solver Program:\n\n"
+         << "This program is designed to solve a maze using a recursive backtracking algorithm. The program will read a maze from command prompt input\n\n"
+
+        << "Rules:\n\n"
+
+        << "\tValid Characters:\n"
+        << "\t\t- ' ' (space) - represents a valid path/empty space\n"
+        << "\t\t- '*' (asterisk) - represents a wall\n\n"
+
+        << "\tThe top leftmost square is the starting position and the bottom rightmost square is the ending position\n\n"
+
+        << "\tYou can only move in 2 cardinal directions: Down and Right - any maze requiring left or upward movements will not be solved\n\n"
+
+        << "Have Fun!\n" 
+        << "============================================================================\n" << endl;
 
     int height;
     int width;
