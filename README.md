@@ -12,3 +12,8 @@ Rules:
     You can only move in 2 cardinal directions: Down and Right - any maze requiring left or upward movements will not be solved
 
 Have Fun!
+
+---------------------------------------------------------------------------------
+
+Known bugs:
+    - On some mazes, solution is found but some rows are shifted in solution (the path is usually still correct). I have not been able to find what is causing it but it only happens on specific mazes.

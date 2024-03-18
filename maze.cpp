@@ -3,6 +3,9 @@
 using namespace std;
 
 
+
+
+// basic maze constructor
 maze::maze(string blueprint, int newHeight, int newWidth) {
 
     // initialize maze components
@@ -32,10 +35,12 @@ maze::maze(string blueprint, int newHeight, int newWidth) {
     
 }
 
+// basic maze deconstructor
 maze::~maze() {
     delete myMaze;
 }
 
+// get the next char in the current row. shifts order of chars by 1
 char maze::peek(queue<char>* row) {
     char ans = 0;
     if (!row->isEmpty()) {
@@ -45,6 +50,7 @@ char maze::peek(queue<char>* row) {
     return ans;
 }
 
+// get the next row without deleting it from the queue. shifts order of rows by 1
 queue<char>* maze::peek() {
     queue<char> *ans = nullptr;
     if (!myMaze->isEmpty()) {
@@ -54,6 +60,7 @@ queue<char>* maze::peek() {
     return ans;
 }
 
+// check if location exists in path
 bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
     bool ans = false;
     //loop through pop it off and push it both to make a copy - Haskel
@@ -82,6 +89,7 @@ bool visited(pair<int, int> location, maze *m, queue<pair<int, int>> &path) {
     return ans;
 }
 
+// check if the right of the current location is a valid move
 char maze::checkright(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
@@ -105,6 +113,8 @@ char maze::checkright(pair<int, int> current, maze *m) {
     }
     return ans;
 }
+
+// check if the bottom of the current location is a valid move
 char maze::checkdown(pair<int, int> current, maze *m) {
     queue<char> *row = new queue<char>;
     char ans = ' ';
@@ -129,6 +139,7 @@ char maze::checkdown(pair<int, int> current, maze *m) {
     return ans;
 }
 
+// recursive function to find a path through the maze
 bool maze::findPath(pair<int, int> current) {
     bool ans = false;
     if (current.second <= 0 || current.first <= 0 || current.second > width || current.first > height) {
@@ -150,6 +161,7 @@ bool maze::findPath(pair<int, int> current) {
     return false;
 }
 
+// iterate through path and mark out the solution with 'X's in the maze
 void maze::generateSolution() {
     queue<char> *row;
     while (!path.isEmpty()) {
@@ -175,6 +187,7 @@ void maze::generateSolution() {
     }
 }
 
+// steps to solving the maze
 void maze::solveMaze() {
     queue<queue<char>*> ans;
     if (!findPath(make_pair(1, 1))) {
@@ -184,6 +197,7 @@ void maze::solveMaze() {
     generateSolution();
 }
 
+// print the maze
 void maze::print() {
     queue<char> *row;
     for (int i = 0; i < height; i++) {
